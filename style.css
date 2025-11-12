@@ -4,6 +4,34 @@
     box-sizing: border-box;
 }
 
+:root {
+    --bg-primary: white;
+    --bg-secondary: #f8f9fa;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --text-tertiary: #999;
+    --border-color: #e0e0e0;
+    --border-light: #ccc;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --input-bg: white;
+    --slider-circle: white;
+    --checkbox-bg: white;
+}
+
+body.dark-mode {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-tertiary: #808080;
+    --border-color: #404040;
+    --border-light: #505050;
+    --shadow-color: rgba(0, 0, 0, 0.6);
+    --input-bg: #2d2d2d;
+    --slider-circle: #666;
+    --checkbox-bg: #1a1a1a;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background: linear-gradient(135deg, #3A0CA3 0%, #7209B7 50%, #4361EE 100%);
@@ -15,13 +43,14 @@ body {
 }
 
 .container {
-    background: white;
+    background: var(--bg-primary);
     border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px var(--shadow-color);
     width: 100%;
     max-width: 600px;
     padding: 40px;
     animation: slideUp 0.5s ease-out;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 @media (max-width: 600px) {
@@ -62,15 +91,72 @@ header {
 }
 
 h1 {
-    color: #333;
+    color: var(--text-primary);
     font-size: 2.5rem;
     margin-bottom: 8px;
     font-weight: 700;
+    transition: color 0.3s ease;
 }
 
 .subtitle {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.theme-toggle-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.theme-toggle input[type="checkbox"] {
+    display: none;
+}
+
+.slider {
+    position: relative;
+    width: 48px;
+    height: 24px;
+    background-color: var(--border-color);
+    border-radius: 24px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.slider::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--slider-circle);
+    top: 3px;
+    left: 3px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.theme-toggle input[type="checkbox"]:checked + .slider {
+    background-color: #4361EE;
+}
+
+.theme-toggle input[type="checkbox"]:checked + .slider::before {
+    transform: translateX(24px);
+}
+
+.toggle-label {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
 }
 
 .input-section {
@@ -82,11 +168,13 @@ h1 {
 #todoInput {
     flex: 1;
     padding: 15px 20px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--border-color);
     border-radius: 12px;
     font-size: 1rem;
     transition: all 0.3s ease;
     outline: none;
+    background-color: var(--input-bg);
+    color: var(--text-primary);
 }
 
 #todoInput:focus {
@@ -118,17 +206,19 @@ h1 {
 
 .stats {
     text-align: center;
-    color: #666;
+    color: var(--text-secondary);
     font-size: 0.9rem;
     margin-bottom: 20px;
     padding: 10px;
-    background: #f8f9fa;
+    background: var(--bg-secondary);
     border-radius: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .separator {
     margin: 0 10px;
-    color: #ccc;
+    color: var(--border-light);
+    transition: color 0.3s ease;
 }
 
 .todo-list {
@@ -137,7 +227,7 @@ h1 {
 }
 
 .todo-item {
-    background: #f8f9fa;
+    background: var(--bg-secondary);
     padding: 15px 20px;
     margin-bottom: 10px;
     border-radius: 12px;
@@ -145,7 +235,7 @@ h1 {
     align-items: center;
     gap: 15px;
     animation: slideIn 0.3s ease-out;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease, background-color 0.3s ease;
 }
 
 @keyframes slideIn {
@@ -170,7 +260,7 @@ h1 {
 
 .todo-item.completed .todo-text {
     text-decoration: line-through;
-    color: #999;
+    color: var(--text-tertiary);
 }
 
 .checkbox {
@@ -178,13 +268,39 @@ h1 {
     height: 24px;
     cursor: pointer;
     accent-color: #4CC9F0;
+    background-color: var(--checkbox-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.checkbox:checked {
+    background-color: #4CC9F0;
+    border-color: #4CC9F0;
+}
+
+.checkbox:checked::after {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
 }
 
 .todo-text {
     flex: 1;
     font-size: 1rem;
-    color: #333;
+    color: var(--text-primary);
     word-break: break-word;
+    transition: color 0.3s ease;
 }
 
 .delete-btn {
@@ -207,8 +323,9 @@ h1 {
 .empty-state {
     text-align: center;
     padding: 40px 20px;
-    color: #999;
+    color: var(--text-tertiary);
     display: none;
+    transition: color 0.3s ease;
 }
 
 .empty-state.show {
